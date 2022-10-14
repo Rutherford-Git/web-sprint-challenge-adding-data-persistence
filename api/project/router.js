@@ -5,7 +5,13 @@ const model = require('./model')
 router.get('/', (req, res, next) => {
     model.find()
     .then(thing => {
-      res.json(thing)
+      let x = thing.map(e => {
+            return {
+                ...e,
+                project_completed: e.project_completed === 1 ? true : false
+            }
+        })
+    res.json(x)   
     })
     .catch(next)
   })
@@ -13,8 +19,11 @@ router.get('/', (req, res, next) => {
   router.post('/', (req, res, next) => {
     model.insert(req.body)
     .then(thing => {
-      res.json(thing)
-    })
+      res.json({
+        ...thing,
+        project_completed: thing.project_completed === 1 ? true : false
+    })   
+      })
     .catch(next)
 })
 
